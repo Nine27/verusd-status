@@ -1,12 +1,12 @@
 <?php
 /**
- * Bitcoin Status Page - Peer Stats
+ * Verus Status Page - Peer Stats
  *
  * @category File
- * @package  BitcoinStatus
- * @author   Craig Watson <craig@cwatson.org>
+ * @package  VerusStatus
+ * @author   Craig Watson <craig@cwatson.org>, Verus adaptation by John Westbrook <johnwestbrook@pm.me>
  * @license  https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
- * @link     https://github.com/craigwatson/bitcoind-status
+ * @link     https://github.com/Nine27/verusd-status
  */
 
  // Get config

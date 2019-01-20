@@ -1,19 +1,19 @@
 <?php
 /**
- * Bitcoin Status Page
+ * Verus Status Page
  *
  * @category File
- * @package  BitcoinStatus
- * @author   Craig Watson <craig@cwatson.org>
+ * @package  VerusStatus
+ * @author   Craig Watson <craig@cwatson.org>, Verus adaptation by John Westbrook <johnwestbrook@pm.me>
  * @license  https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
- * @link     https://github.com/craigwatson/bitcoind-status
+ * @link     https://github.com/Nine27/verusd-status
  */
 
 $curl_requests = 0;
-$default_app_title = 'Bitcoin Node Status';
+$default_app_title = 'Verus Node Status';
 
 /**
- * Connects to Bitcoin daemon and retrieves information, then writes to cache
+ * Connects to Verus daemon and retrieves information, then writes to cache
  *
  * @param string $from_cache Whether to get the data from cache or not
  *
@@ -55,7 +55,10 @@ function getData($from_cache = false)
     $data = $bitcoin->getblockchaininfo();
     $net_info = $bitcoin->getnetworkinfo();
     $data['connections'] = $net_info['connections'];
-    $data['subversion'] = $net_info['subversion'];
+    $data['subversion'] = ($data['consensus']['chaintip']);
+    $subversion = $data['subversion'];
+    $data['vfriendlyname'] = ($data['upgrades'][$subversion]['name']);
+    //$data['vfriendlyname'] = ($data['upgrades'][1]['name']);
 
     // Handle errors if they happened
     if (!$data) {
@@ -114,24 +117,19 @@ function getData($from_cache = false)
         $bitnodes_curl = curl_init();
     }
 
-    // Get max height from bitnodes.earn.com
+    // Get max height from explorer.veruscoin.io
     if ($config['display_max_height'] === true) {
-        if ($config['display_testnet'] === true) {
-            $exec_result = json_decode(curlRequest("https://testnet.blockexplorer.com/api/status?q=getBlockCount", $bitnodes_curl), true);
-            $data['max_height'] = $exec_result['blockcount'];
-        } else {
-            $exec_result = json_decode(curlRequest("https://bitnodes.earn.com/api/v1/snapshots/", $bitnodes_curl), true);
-            $data['max_height'] = $exec_result['results'][0]['latest_height'];
-        }
+        $exec_result = curlRequest("https://explorer.veruscoin.io/api/getblockcount", $bitnodes_curl);
+            $data['max_height'] = $exec_result;
         $data['node_height_percent'] = round(($data['blocks']/$data['max_height'])*100, 1);
     }
 
     // Get node info from bitnodes.earn.com
-    if ($config['display_bitnodes_info'] === true) {
-        $data['bitnodes_info'] = json_decode(curlRequest("https://bitnodes.earn.com/api/v1/nodes/" . $data['node_ip'] . "-8333/", $bitnodes_curl), true);
-        $latency = json_decode(curlRequest("https://bitnodes.earn.com/api/v1/nodes/" . $data['node_ip'] . "-8333/latency/", $bitnodes_curl), true);
-        $data['bitnodes_info']['latest_latency'] = $latency['daily_latency'][0]['v'];
-    }
+    //if ($config['display_bitnodes_info'] === true) { 
+    //    $data['bitnodes_info'] = json_decode(curlRequest("https://bitnodes.earn.com/api/v1/nodes/" . $data['node_ip'] . "-8333/", $bitnodes_curl), true);
+    //    $latency = json_decode(curlRequest("https://bitnodes.earn.com/api/v1/nodes/" . $data['node_ip'] . "-8333/latency/", $bitnodes_curl), true);
+    //    $data['bitnodes_info']['latest_latency'] = $latency['daily_latency'][0]['v'];
+    //}
 
     // Close handles
     if ($config['display_max_height'] || $config['display_bitnodes_info']) {
@@ -344,7 +342,7 @@ function curlRequest($url, $curl_handle, $fail_on_error = false)
 
     curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Bitcoin Node Status Page');
+    curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Verus Node Status Page');
     curl_setopt($curl_handle, CURLOPT_URL, $url);
 
     $curl_requests++;
@@ -359,7 +357,7 @@ function curlRequest($url, $curl_handle, $fail_on_error = false)
 function generateDonationImage()
 {
     global $config;
-    $alt_text = 'Donate ' . $config['donation_amount'] . ' BTC to ' . $config['donation_address'];
+    $alt_text = 'Donate ' . $config['donation_amount'] . ' VRSC to ' . $config['donation_address'];
     return "\n" . '<img src="https://chart.googleapis.com/chart?chld=H|2&chs=225x225&cht=qr&chl=' . $config['donation_address'] . '" alt="' . $alt_text . '" />' . "\n";
 }
 

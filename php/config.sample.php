@@ -1,20 +1,20 @@
 <?php
 /**
- * Bitcoin Status Page
+ * Verus Status Page
  *
  * @category File
- * @package  BitcoinStatus
- * @author   Craig Watson <craig@cwatson.org>
+ * @package  VerusStatus
+ * @author   Craig Watson <craig@cwatson.org>, Verus adaptation by John Westbrook <johnwestbrook@pm.me>
  * @license  https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
- * @link     https://github.com/craigwatson/bitcoind-status
+ * @link     https://github.com/Nine27/verusd-status
  */
 
 $config = array(
   // RPC
-  'rpc_user'                  => 'rpcuser',
-  'rpc_pass'                  => 'rpcpass',
+  'rpc_user'                  => 'rpcuser_find_inside_.komodo/VRSC/VRSC.conf',
+  'rpc_pass'                  => 'rpcpass_find_inside_.komodo/VRSC/VRSC.conf',
   'rpc_host'                  => 'localhost',
-  'rpc_port'                  => '8332',
+  'rpc_port'                  => '27486',
   'rpc_ssl'                   => false,
   'rpc_ssl_ca'                => null,
 
@@ -52,7 +52,7 @@ $config = array(
   'display_max_height'        => true,
   'use_bitcoind_ip'           => true,
   'intro_text'                => 'not_set',
-  'title_text'                => 'Bitcoin Node Status',
+  'title_text'                => 'Verus Node Status',
   'display_bitnodes_info'     => false,
   'display_chart'             => false,
   'display_peer_chart'        => false,
@@ -73,7 +73,7 @@ $config = array(
 
   // Uptime
   'display_bitcoind_uptime'   => false,
-  'bitcoind_process_name'     => 'bitcoind',
+  'bitcoind_process_name'     => 'komodod',
 
   // System
   'date_format'               => 'H:i:s T, j F Y ',
